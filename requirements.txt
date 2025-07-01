@@ -1,4 +1,0 @@
-# requirements.txt
-# Dependencies for Tic-Tac-Toe Professional Edition
-
-pygame>=2.5.0
