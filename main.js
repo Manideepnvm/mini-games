@@ -444,3 +444,14 @@ window.gameController = {
 };
 
 console.log("🎮 Main game controller loaded successfully!");
+
+document.addEventListener('DOMContentLoaded', function () {
+    const playButtons = document.querySelectorAll('.play-button');
+
+    playButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Example action: Redirect to a game page
+            window.location.href = 'tic-tac-toe.html'; // Replace with actual game URL
+        });
+    });
+});
