@@ -179,7 +179,17 @@ function loadGame(gameName, gameInfo) {
     }
   } catch (error) {
     console.error(`Error loading game ${gameName}:`, error);
-    showToast(`Could not load ${gameInfo.title}. Please check if the game file is loaded.`, 'error');
+    // Diagnostic: list matching globals that end with 'Game'
+    try {
+      const globals = Object.keys(window).filter(k => /Game$/.test(k));
+      console.info('Available game-like globals:', globals);
+    } catch (gErr) {
+      console.info('Could not enumerate window globals', gErr);
+    }
+    // Show error message in toast for debugging (shortened)
+    const msg = error && error.message ? error.message : 'Unknown error';
+    showToast(`Could not load ${gameInfo.title}: ${msg}`, 'error');
+    console.error(error && error.stack ? error.stack : error);
     returnToMenu();
   }
 }
@@ -363,7 +373,7 @@ function showToast(message, type = 'success') {
 }
 
 // Utility functions for games
-window.gameUtils = {
+window.gameAPI = {
   clearCanvas,
   updateGameStatus,
   updatePlayerTurn,
@@ -372,59 +382,61 @@ window.gameUtils = {
   gameState,
   canvas,
   ctx,
-  
-  // Drawing utilities
-  drawText(text, x, y, font = '20px Arial', color = '#ffffff', align = 'center') {
-    ctx.font = font;
-    ctx.fillStyle = color;
-    ctx.textAlign = align;
-    ctx.fillText(text, x, y);
-  },
-  
-  drawRect(x, y, width, height, color = '#ffffff', filled = true) {
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+  returnToMenu,
+  gameUtils: {
+    // Drawing utilities
+    drawText(text, x, y, font = '20px Arial', color = '#ffffff', align = 'center') {
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.fillText(text, x, y);
+    },
     
-    if (filled) {
-      ctx.fillRect(x, y, width, height);
-    } else {
-      ctx.strokeRect(x, y, width, height);
-    }
-  },
-  
-  drawCircle(x, y, radius, color = '#ffffff', filled = true) {
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, Math.PI * 2);
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+    drawRect(x, y, width, height, color = '#ffffff', filled = true) {
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      
+      if (filled) {
+        ctx.fillRect(x, y, width, height);
+      } else {
+        ctx.strokeRect(x, y, width, height);
+      }
+    },
     
-    if (filled) {
-      ctx.fill();
-    } else {
+    drawCircle(x, y, radius, color = '#ffffff', filled = true) {
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      
+      if (filled) {
+        ctx.fill();
+      } else {
+        ctx.stroke();
+      }
+    },
+    
+    drawLine(x1, y1, x2, y2, color = '#ffffff', width = 2) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
       ctx.stroke();
+    },
+    
+    // Game utilities
+    getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+    
+    distance(x1, y1, x2, y2) {
+      return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    },
+    
+    clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
     }
-  },
-  
-  drawLine(x1, y1, x2, y2, color = '#ffffff', width = 2) {
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.stroke();
-  },
-  
-  // Game utilities
-  getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  },
-  
-  distance(x1, y1, x2, y2) {
-    return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-  },
-  
-  clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
   }
 };
 
@@ -440,18 +452,7 @@ window.gameController = {
   updateScore,
   showToast,
   gameState,
-  gameUtils: window.gameUtils
+  gameAPI: window.gameAPI
 };
 
 console.log("🎮 Main game controller loaded successfully!");
-
-document.addEventListener('DOMContentLoaded', function () {
-    const playButtons = document.querySelectorAll('.play-button');
-
-    playButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Example action: Redirect to a game page
-            window.location.href = 'tic-tac-toe.html'; // Replace with actual game URL
-        });
-    });
-});

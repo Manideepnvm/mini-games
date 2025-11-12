@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✂️ Rock Paper Scissors | Mini Games</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(26, 26, 46, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 700px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ff6b9d;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+    }
+
+    .subtitle {
+      color: #cccccc;
+      font-size: 1.1rem;
+    }
+
+    .status-message {
+      text-align: center;
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      padding: 15px;
+      background: rgba(245, 87, 108, 0.2);
+      border-radius: 10px;
+      border-left: 4px solid #ff6b9d;
+      color: #00ff88;
+    }
+
+    .game-area {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .player-area {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid #ff6b9d;
+      text-align: center;
+    }
+
+    .player-title {
+      color: #ff6b9d;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .choice-display {
+      font-size: 4rem;
+      margin: 20px 0;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      color: #00ff88;
+    }
+
+    .choice-display.empty {
+      color: #666666;
+      font-size: 1.5rem;
+    }
+
+    .choice-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .choice-btn {
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: 2px solid #ff6b9d;
+      background: rgba(255, 107, 157, 0.1);
+      color: #ff6b9d;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .choice-btn:hover {
+      background: rgba(255, 107, 157, 0.3);
+      transform: translateX(5px);
+    }
+
+    .choice-btn:active {
+      transform: translateX(0);
+    }
+
+    .vs-separator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #ff6b9d;
+      font-weight: bold;
+    }
+
+    .result-section {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 25px;
+      border-radius: 15px;
+      border: 2px solid #00ff88;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .result-title {
+      color: #00ff88;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .result-text {
+      font-size: 1.3rem;
+      color: #cccccc;
+      margin: 10px 0;
+    }
+
+    .result-text.win {
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .result-text.lose {
+      color: #ff6b6b;
+      font-weight: bold;
+    }
+
+    .score-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .score-card {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #ff6b9d;
+      text-align: center;
+    }
+
+    .score-label {
+      color: #888888;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .score-value {
+      color: #00ff88;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 107, 157, 0.2);
+      color: #ff6b9d;
+      border: 2px solid #ff6b9d;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 107, 157, 0.3);
+    }
+
+    .instructions {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #ff6b9d;
+      margin-top: 20px;
+    }
+
+    .instructions h3 {
+      color: #ff6b9d;
+      margin-bottom: 10px;
+    }
+
+    .instructions p {
+      color: #cccccc;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .game-area {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .choice-display {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>✂️ ROCK PAPER SCISSORS 📄</h1>
+      <p class="subtitle">The Timeless Hand Game</p>
+    </header>
+
+    <div class="status-message" id="statusMsg">
+      🎮 Player 1 - Make Your Choice!
+    </div>
+
+    <div class="game-area">
+      <div class="player-area">
+        <div class="player-title">👤 Player 1</div>
+        <div class="choice-display empty" id="p1Choice">?</div>
+        <div class="choice-buttons">
+          <button class="choice-btn" onclick="selectChoice('rock', 1)">🪨 Rock</button>
+          <button class="choice-btn" onclick="selectChoice('paper', 1)">📄 Paper</button>
+          <button class="choice-btn" onclick="selectChoice('scissors', 1)">✂️ Scissors</button>
+        </div>
+      </div>
+
+      <div class="player-area">
+        <div class="player-title">👤 Player 2</div>
+        <div class="choice-display empty" id="p2Choice">?</div>
+        <div class="choice-buttons">
+          <button class="choice-btn" onclick="selectChoice('rock', 2)">🪨 Rock</button>
+          <button class="choice-btn" onclick="selectChoice('paper', 2)">📄 Paper</button>
+          <button class="choice-btn" onclick="selectChoice('scissors', 2)">✂️ Scissors</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-section" id="resultSection" style="display: none;">
+      <div class="result-title">🎯 RESULT</div>
+      <div class="result-text" id="resultText">Waiting for both players...</div>
+    </div>
+
+    <div class="score-display">
+      <div class="score-card">
+        <div class="score-label">Player 1 Wins</div>
+        <div class="score-value" id="p1Wins">0</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Player 2 Wins</div>
+        <div class="score-value" id="p2Wins">0</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-primary" onclick="resetGame()">🔄 Reset Score</button>
+      <button class="btn-secondary" onclick="goBackToMenu()">← Back to Menu</button>
+    </div>
+
+    <div class="instructions">
+      <h3>📖 Rules:</h3>
+      <p>
+        • Rock beats Scissors 🪨 > ✂️<br>
+        • Scissors beats Paper ✂️ > 📄<br>
+        • Paper beats Rock 📄 > 🪨<br>
+        • Both players choose at the same time<br>
+        • First player to 5 wins takes the match!
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Lightweight standalone handler so the standalone HTML page works even without the full app
+    (function(){
+      let p1 = null, p2 = null;
+      let p1Wins = 0, p2Wins = 0;
+
+      window.selectChoice = function(choice, player){
+        if(player === 1){
+          p1 = choice;
+          document.getElementById('p1Choice').textContent = choice === 'rock' ? '🪨' : (choice === 'paper' ? '📄' : '✂️');
+          document.getElementById('statusMsg').textContent = "🎮 Player 2 - Make Your Choice!";
+        } else {
+          p2 = choice;
+          document.getElementById('p2Choice').textContent = choice === 'rock' ? '🪨' : (choice === 'paper' ? '📄' : '✂️');
+          // Determine result
+          const res = (p1 === p2) ? 'draw' : ((p1 === 'rock' && p2 === 'scissors') || (p1 === 'scissors' && p2 === 'paper') || (p1 === 'paper' && p2 === 'rock') ? 'p1' : 'p2');
+          const resultSection = document.getElementById('resultSection');
+          const resultText = document.getElementById('resultText');
+          resultSection.style.display = 'block';
+          if(res === 'draw'){
+            resultText.textContent = "🤝 It's a Draw!";
+          } else if(res === 'p1'){
+            p1Wins++;
+            document.getElementById('p1Wins').textContent = p1Wins;
+            resultText.textContent = "🎉 Player 1 Wins!";
+          } else {
+            p2Wins++;
+            document.getElementById('p2Wins').textContent = p2Wins;
+            resultText.textContent = "🎉 Player 2 Wins!";
+          }
+          // reset choices after short delay
+          setTimeout(()=>{
+            p1 = null; p2 = null; resultSection.style.display = 'none';
+            document.getElementById('p1Choice').textContent = '?';
+            document.getElementById('p2Choice').textContent = '?';
+            document.getElementById('statusMsg').textContent = "🎮 Player 1 - Make Your Choice!";
+          }, 1600);
+        }
+      };
+
+      window.resetGame = function(){ p1Wins = 0; p2Wins = 0; document.getElementById('p1Wins').textContent = '0'; document.getElementById('p2Wins').textContent = '0'; document.getElementById('resultSection').style.display = 'none'; document.getElementById('p1Choice').textContent='?'; document.getElementById('p2Choice').textContent='?'; };
+
+      window.goBackToMenu = function(){ window.history.back(); };
+    })();
+  </script>
+  <script src="../games/rockpaperscissors.js"></script>
+</body>
+</html>

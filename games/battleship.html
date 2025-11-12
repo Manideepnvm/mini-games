@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚢 Battleship | Mini Games</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .game-wrapper {
+      background: rgba(26, 26, 46, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .game-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .game-title {
+      font-size: 2.5rem;
+      color: #00d4ff;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    .game-subtitle {
+      color: #cccccc;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    #gameCanvas {
+      display: block;
+      margin: 20px auto;
+      background: #0a0a0a;
+      border: 3px solid #00d4ff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      cursor: pointer;
+    }
+
+    .game-info {
+      background: rgba(0, 212, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #00d4ff;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .phase-text {
+      color: #00ff88;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .instructions-box {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #00d4ff;
+      margin-bottom: 20px;
+      color: #cccccc;
+      line-height: 1.6;
+    }
+
+    .instructions-box h3 {
+      color: #00d4ff;
+      margin: 0 0 10px 0;
+    }
+
+    .instructions-box p {
+      margin: 5px 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00d4ff 0%, #00f2fe 100%);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+      border: 2px solid #00d4ff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 212, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .game-wrapper {
+        padding: 20px;
+      }
+
+      .game-title {
+        font-size: 1.8rem;
+      }
+
+      #gameCanvas {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <div class="game-header">
+      <h1 class="game-title">🚢 BATTLESHIP ⚓</h1>
+      <p class="game-subtitle">Naval Strategy and Tactics</p>
+    </div>
+
+    <div class="game-info">
+      <p class="phase-text" id="gamePhase">🚢 Loading game...</p>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div class="instructions-box">
+      <h3>📖 How to Play:</h3>
+      <p><strong>Phase 1: Ship Placement</strong></p>
+      <p style="margin-left: 20px;">
+        • Click on your board (left side) to place ships<br>
+        • Press R key to rotate ships before placing<br>
+        • Place 2 Destroyers (2 cells) and 1 Cruiser (3 cells)<br>
+        • Ships cannot overlap or go out of bounds
+      </p>
+      <p style="margin-top: 10px;"><strong>Phase 2: Battle</strong></p>
+      <p style="margin-left: 20px;">
+        • Click on enemy board (right side) to attack<br>
+        • 🎯 HIT = Red cell, you get another turn<br>
+        • 💦 MISS = White cell, turn switches to opponent<br>
+        • Sink all enemy ships to win! First to destroy all ships wins
+      </p>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="window.location.reload()">🔄 Reset Game</button>
+      <button class="btn btn-secondary" onclick="window.location.href='../index.html'">← Back to Menu</button>
+    </div>
+  </div>
+
+  <script src="../games/battleship.js"></script>
+  <script>
+    // Initialize game when DOM is ready
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (window.BattleshipGame && typeof window.BattleshipGame.init === 'function') {
+        // Create minimal GameAPI interface for standalone mode
+        const gameAPI = {
+          canvas: canvas,
+          ctx: ctx,
+          gameState: { currentPlayer: 1 },
+          clearCanvas: () => ctx.clearRect(0, 0, canvas.width, canvas.height),
+          updateGameStatus: (status) => {
+            document.getElementById('gamePhase').textContent = status;
+          },
+          updatePlayerTurn: (player) => {
+            document.getElementById('gamePhase').textContent = `Player ${player}'s Turn`;
+          },
+          showToast: (message) => {
+            console.log('Toast:', message);
+          },
+          returnToMenu: () => {
+            window.location.href = '../index.html';
+          },
+          gameUtils: {
+            drawText: (text, x, y, color, size) => {
+              ctx.fillStyle = color;
+              ctx.font = `${size}px Arial`;
+              ctx.fillText(text, x, y);
+            },
+            drawRect: (x, y, w, h, color) => {
+              ctx.fillStyle = color;
+              ctx.fillRect(x, y, w, h);
+            },
+            drawCircle: (x, y, radius, color) => {
+              ctx.fillStyle = color;
+              ctx.beginPath();
+              ctx.arc(x, y, radius, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        };
+
+        // Initialize and start game
+        window.BattleshipGame.init(gameAPI);
+        window.BattleshipGame.start();
+
+        // Add event listeners
+        canvas.addEventListener('click', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          if (window.BattleshipGame.handleClick) {
+            window.BattleshipGame.handleClick(x, y, e);
+          }
+        });
+
+        canvas.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          if (window.BattleshipGame.handleRightClick) {
+            window.BattleshipGame.handleRightClick();
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (window.BattleshipGame.handleKeydown) {
+            window.BattleshipGame.handleKeydown(e);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

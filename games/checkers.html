@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚫🔴 Checkers | Mini Games</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .game-wrapper {
+      background: rgba(26, 26, 46, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .game-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .game-title {
+      font-size: 2.5rem;
+      color: #D2691E;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 10px rgba(210, 105, 30, 0.5);
+    }
+
+    .game-subtitle {
+      color: #cccccc;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    #gameCanvas {
+      display: block;
+      margin: 20px auto;
+      background: #0a0a0a;
+      border: 3px solid #D2691E;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(210, 105, 30, 0.3);
+      cursor: pointer;
+    }
+
+    .game-info {
+      background: rgba(210, 105, 30, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #D2691E;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .status-text {
+      color: #FFD700;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #D2691E;
+      text-align: center;
+    }
+
+    .stat-label {
+      color: #888888;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      color: #FFD700;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .instructions-box {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #D2691E;
+      margin-bottom: 20px;
+      color: #cccccc;
+      line-height: 1.6;
+    }
+
+    .instructions-box h3 {
+      color: #D2691E;
+      margin: 0 0 10px 0;
+    }
+
+    .instructions-box p {
+      margin: 5px 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(210, 105, 30, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(210, 105, 30, 0.2);
+      color: #D2691E;
+      border: 2px solid #D2691E;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(210, 105, 30, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .game-wrapper {
+        padding: 20px;
+      }
+
+      .game-title {
+        font-size: 1.8rem;
+      }
+
+      #gameCanvas {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <div class="game-header">
+      <h1 class="game-title">⚫🔴 CHECKERS</h1>
+      <p class="game-subtitle">Classic Board Strategy Game</p>
+    </div>
+
+    <div class="game-info">
+      <p class="status-text" id="gameStatus">🔴 Red Player's Turn</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Red Pieces</div>
+        <div class="stat-value" id="redPieces">12</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Current Turn</div>
+        <div class="stat-value" id="currentTurn">Red</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Black Pieces</div>
+        <div class="stat-value" id="blackPieces">12</div>
+      </div>
+    </div>
+
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div class="instructions-box">
+      <h3>📖 How to Play:</h3>
+      <p><strong>Basic Rules:</strong></p>
+      <p style="margin-left: 20px;">
+        • Click a piece to select it<br>
+        • Click a highlighted square to move<br>
+        • Regular pieces move diagonally forward only<br>
+        • Kings (♔) can move diagonally in any direction
+      </p>
+      <p style="margin-top: 10px;"><strong>Capturing:</strong></p>
+      <p style="margin-left: 20px;">
+        • Jump over opponent pieces to capture them<br>
+        • Multiple jumps allowed in one turn (mandatory if available)<br>
+        • Captured pieces are removed from the board
+      </p>
+      <p style="margin-top: 10px;"><strong>Becoming a King:</strong></p>
+      <p style="margin-left: 20px;">
+        • Reach the opposite end of the board<br>
+        • Kings gain the ability to move backwards
+      </p>
+      <p style="margin-top: 10px;"><strong>Winning:</strong></p>
+      <p style="margin-left: 20px;">
+        • Capture all opponent pieces, or<br>
+        • Block all opponent moves
+      </p>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="window.location.reload()">🔄 New Game</button>
+      <button class="btn btn-secondary" onclick="window.location.href='../index.html'">← Back to Menu</button>
+    </div>
+  </div>
+
+  <script src="../games/checkers.js"></script>
+  <script>
+    // Initialize game when DOM is ready
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (window.CheckersGame && typeof window.CheckersGame.init === 'function') {
+        // Create minimal GameAPI interface for standalone mode
+        const gameAPI = {
+          canvas: canvas,
+          ctx: ctx,
+          gameState: { currentPlayer: 1 },
+          clearCanvas: () => ctx.clearRect(0, 0, canvas.width, canvas.height),
+          updateGameStatus: (status) => {
+            document.getElementById('gameStatus').textContent = status;
+          },
+          updatePlayerTurn: (player) => {
+            document.getElementById('currentTurn').textContent = player === 1 ? 'Red' : 'Black';
+          },
+          updateScore: (scores) => {
+            // Update piece counts
+            console.log('Scores:', scores);
+          },
+          showToast: (message, type) => {
+            console.log(`Toast (${type}):`, message);
+          },
+          returnToMenu: () => {
+            window.location.href = '../index.html';
+          },
+          gameUtils: {
+            drawText: (text, x, y, size, color, align = 'center') => {
+              ctx.fillStyle = color;
+              ctx.font = `${size}px Arial`;
+              ctx.textAlign = align;
+              ctx.textBaseline = 'middle';
+              ctx.fillText(text, x, y);
+            },
+            drawRect: (x, y, w, h, color, fill = true) => {
+              if (fill) {
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, w, h);
+              } else {
+                ctx.strokeStyle = color;
+                ctx.strokeRect(x, y, w, h);
+              }
+            },
+            drawCircle: (x, y, radius, color, fill = true) => {
+              ctx.beginPath();
+              ctx.arc(x, y, radius, 0, Math.PI * 2);
+              if (fill) {
+                ctx.fillStyle = color;
+                ctx.fill();
+              } else {
+                ctx.strokeStyle = color;
+                ctx.stroke();
+              }
+            }
+          }
+        };
+
+        // Initialize and start game
+        window.CheckersGame.init(gameAPI);
+        window.CheckersGame.start();
+
+        // Add event listeners
+        canvas.addEventListener('click', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          if (window.CheckersGame.handleClick) {
+            window.CheckersGame.handleClick(x, y, e);
+          }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          if (window.CheckersGame.handleMouseMove) {
+            window.CheckersGame.handleMouseMove(x, y, e);
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (window.CheckersGame.handleKeydown) {
+            window.CheckersGame.handleKeydown(e);
+          }
+        });
+      }
+    });
+
+    // Update piece counts from game
+    function updatePieceCounts(red, black) {
+      document.getElementById('redPieces').textContent = red;
+      document.getElementById('blackPieces').textContent = black;
+    }
+
+    // Expose to game module
+    window.updatePieceCounts = updatePieceCounts;
+  </script>
+</body>
+</html>

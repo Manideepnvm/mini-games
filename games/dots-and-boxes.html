@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⬜ Dots and Boxes | Mini Games</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(26, 26, 46, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      max-width: 900px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #00d4ff;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    }
+
+    .subtitle {
+      color: #cccccc;
+      font-size: 1.1rem;
+    }
+
+    .game-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #00d4ff;
+      text-align: center;
+    }
+
+    .stat-label {
+      color: #888888;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      color: #00ff88;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .game-info {
+      background: rgba(0, 212, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 4px solid #00d4ff;
+      margin-bottom: 30px;
+      text-align: center;
+      color: #cccccc;
+    }
+
+    .game-board {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .dots-grid {
+      display: inline-grid;
+      gap: 30px;
+      padding: 20px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: #ffffff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .dot:hover {
+      background: #00ff88;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .line {
+      position: absolute;
+      background: #00d4ff;
+      cursor: pointer;
+    }
+
+    .line:hover {
+      background: #00ffff;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .line.player1 {
+      background: #00d4ff;
+    }
+
+    .line.player2 {
+      background: #ff6b6b;
+    }
+
+    .box {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .box.player1 {
+      background: rgba(0, 212, 255, 0.4);
+      color: #00d4ff;
+    }
+
+    .box.player2 {
+      background: rgba(255, 107, 107, 0.4);
+      color: #ff6b6b;
+    }
+
+    .score-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .score-card {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #00d4ff;
+      text-align: center;
+    }
+
+    .score-label {
+      color: #888888;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .score-value {
+      color: #00ff88;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .player-indicator {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .player1-ind {
+      background: #00d4ff;
+    }
+
+    .player2-ind {
+      background: #ff6b6b;
+    }
+
+    .status-message {
+      background: rgba(0, 212, 255, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 4px solid #00d4ff;
+      color: #00ff88;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .instructions {
+      background: rgba(42, 42, 42, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #00d4ff;
+      margin-bottom: 20px;
+    }
+
+    .instructions h3 {
+      color: #00d4ff;
+      margin-bottom: 10px;
+    }
+
+    .instructions p {
+      color: #cccccc;
+      line-height: 1.6;
+      margin-bottom: 5px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 212, 255, 0.2);
+      color: #00d4ff;
+      border: 2px solid #00d4ff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 212, 255, 0.3);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .game-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .score-display {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⬜ DOTS AND BOXES 📦</h1>
+      <p class="subtitle">Connect Dots to Form Boxes</p>
+    </header>
+
+    <div class="status-message" id="statusMsg">
+      🎮 Player 1's Turn - Draw lines between dots!
+    </div>
+
+    <div class="game-stats">
+      <div class="stat-card">
+        <div class="stat-label">Player 1 Boxes</div>
+        <div class="stat-value" id="p1Boxes">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Game Progress</div>
+        <div class="stat-value" id="gameProgress">0%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Player 2 Boxes</div>
+        <div class="stat-value" id="p2Boxes">0</div>
+      </div>
+    </div>
+
+    <div class="game-info">
+      ✏️ Click between dots to draw lines | Complete a box to earn a point and play again!
+    </div>
+
+    <div class="game-board">
+      <svg id="gameCanvas" width="400" height="400" style="background: #0a0a0a; border-radius: 10px;">
+        <!-- Dots, Lines, and Boxes will be drawn here -->
+      </svg>
+    </div>
+
+    <div class="score-display">
+      <div class="score-card">
+        <div class="score-label">
+          <span class="player-indicator player1-ind"></span>Player 1
+        </div>
+        <div class="score-value" id="score1">0</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">
+          <span class="player-indicator player2-ind"></span>Player 2
+        </div>
+        <div class="score-value" id="score2">0</div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>📖 How to Play:</h3>
+      <p>
+        • Draw lines between adjacent dots by clicking on the spaces between them<br>
+        • Each player takes turns drawing one line<br>
+        • When you complete the fourth side of a box, you score and get to play again<br>
+        • Complete all boxes to end the game<br>
+        • The player with the most boxes wins! 🏆<br>
+        <strong>Strategy Tip:</strong> Try to force your opponent into completing boxes for you!
+      </p>
+    </div>
+
+    <div class="controls">
+      <button class="btn-primary" onclick="resetGame()">🔄 New Game</button>
+      <button class="btn-secondary" onclick="goBackToMenu()">← Back to Menu</button>
+    </div>
+  </div>
+
+  <script>
+    // Simple SVG-based board display
+    function initializeBoard() {
+      const svg = document.getElementById('gameCanvas');
+      const dotSpacing = 80;
+      const dotRadius = 4;
+
+      // Draw dots (5x5 grid for 4x4 boxes)
+      for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 5; col++) {
+          const x = 40 + col * dotSpacing;
+          const y = 40 + row * dotSpacing;
+          
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', x);
+          dot.setAttribute('cy', y);
+          dot.setAttribute('r', dotRadius);
+          dot.setAttribute('fill', '#ffffff');
+          dot.setAttribute('class', 'dot');
+          svg.appendChild(dot);
+        }
+      }
+    }
+
+    initializeBoard();
+
+    function resetGame() {
+      location.reload();
+    }
+
+    function goBackToMenu() {
+      window.history.back();
+    }
+  </script>
+
+  <script src="../games/dotsandboxes.js"></script>
+</body>
+</html>
