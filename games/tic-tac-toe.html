@@ -317,8 +317,19 @@
 
   <script>
     // Page-level helpers for standalone preview pages
-    window.resetGame = function(){ location.reload(); };
-    window.goBackToMenu = function(){ window.history.back(); };
+    window.resetGame = function(){ 
+      console.log('Resetting game...');
+      location.reload(); 
+    };
+    
+    window.goBackToMenu = function(){ 
+      console.log('Going back...');
+      if(window.history.length > 1) {
+        window.history.back();
+      } else {
+        alert('No previous page available');
+      }
+    };
   </script>
   <script src="../games/tictactoe.js"></script>
 </body>

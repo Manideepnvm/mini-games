@@ -379,10 +379,11 @@ window.gameAPI = {
   updatePlayerTurn,
   updateScore,
   showToast,
+  returnToMenu,
   gameState,
   canvas,
   ctx,
-  returnToMenu,
+  gameInfo: null,
   gameUtils: {
     // Drawing utilities
     drawText(text, x, y, font = '20px Arial', color = '#ffffff', align = 'center') {

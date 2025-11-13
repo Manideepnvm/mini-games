@@ -5,7 +5,7 @@
 // Place ships, fire shots, sink the fleet!
 // ========================================
 
-window.BattleshipGame = (function() {
+window.battleshipGame = (function() {
   'use strict';
 
   // ===== GAME STATE =====

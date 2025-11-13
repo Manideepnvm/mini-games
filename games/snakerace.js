@@ -2,7 +2,7 @@
 // SNAKE RACE GAME MODULE (4-Player)
 // ========================================
 
-window.snkeraceGame = (function() {
+window.snakeraceGame = (function() {
   let gameAPI = null;
   let gameConfig = null;
   let gameRunning = false;

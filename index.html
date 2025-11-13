@@ -169,5 +169,25 @@
   <script src="games/ludo.js"></script>
   <script src="games/fourplayerpong.js"></script>
   <script src="games/triviashowdown.js"></script>
+
+  <!-- Verify all games loaded -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      // Check which games loaded successfully
+      const requiredGames = [
+        'tictactoeGame', 'rockpaperscissorsGame', 'battleshipGame', 'checkersGame',
+        'dotsandboxesGame', 'unoGame', 'snakeraceGame', 'ludoGame',
+        'fourplayerpongGame', 'triviashowdownGame'
+      ];
+      
+      const loadedGames = requiredGames.filter(g => typeof window[g] === 'object');
+      const failedGames = requiredGames.filter(g => typeof window[g] !== 'object');
+      
+      console.log(`✅ Loaded ${loadedGames.length}/10 games:`, loadedGames);
+      if (failedGames.length > 0) {
+        console.error(`❌ Failed to load ${failedGames.length} games:`, failedGames);
+      }
+    });
+  </script>
 </body>
 </html>
