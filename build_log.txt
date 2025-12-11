@@ -1,0 +1,23 @@
+
+> mini-games-app@0.0.0 build
+> tsc -b && vite build
+
+src/App.tsx(5,10): error TS6133: 'games' is declared but its value is never read.
+src/App.tsx(6,1): error TS6133: 'IGame' is declared but its value is never read.
+src/App.tsx(6,10): error TS1484: 'IGame' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/GameContainer.tsx(2,10): error TS1484: 'IGame' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/GameContainer.tsx(12,65): error TS2345: Argument of type 'RefObject<HTMLCanvasElement | null>' is not assignable to parameter of type 'RefObject<HTMLCanvasElement>'.
+  Type 'HTMLCanvasElement | null' is not assignable to type 'HTMLCanvasElement'.
+    Type 'null' is not assignable to type 'HTMLCanvasElement'.
+src/games/GameInterface.ts(1,1): error TS6192: All imports in import declaration are unused.
+src/games/GameInterface.ts(1,10): error TS1484: 'KeyboardEvent' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/games/GameInterface.ts(1,25): error TS1484: 'MouseEvent' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/games/index.ts(1,10): error TS1484: 'IGame' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/games/TicTacToe.ts(1,10): error TS1484: 'IGame' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/games/TicTacToe.ts(1,17): error TS1484: 'GameState' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useGame.ts(2,10): error TS1484: 'IGame' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useGame.ts(2,17): error TS1484: 'GameState' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/hooks/useGame.ts(9,24): error TS2554: Expected 1 arguments, but got 0.
+src/hooks/useGame.ts(10,29): error TS2554: Expected 1 arguments, but got 0.
+src/hooks/useGame.ts(14,19): error TS6133: 'deltaTime' is declared but its value is never read.
+src/hooks/useGame.ts(42,13): error TS2322: Type 'undefined' is not assignable to type 'number'.

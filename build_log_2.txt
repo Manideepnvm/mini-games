@@ -1,0 +1,5 @@
+
+> mini-games-app@0.0.0 build
+> tsc -b && vite build
+
+src/hooks/useGame.ts(15,19): error TS6133: '_deltaTime' is declared but its value is never read.
