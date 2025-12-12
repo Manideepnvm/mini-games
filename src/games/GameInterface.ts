@@ -10,6 +10,8 @@ export interface GameState {
 export interface IGame {
   id: string;
   title: string;
+  description?: string;
+  icon?: string;
   minPlayers: number;
   maxPlayers: number;
 

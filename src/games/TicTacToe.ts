@@ -8,6 +8,8 @@ interface TicTacToeState extends GameState {
 export const TicTacToe: IGame = {
     id: 'tictactoe',
     title: 'Tic Tac Toe',
+    description: 'Classic 3x3 grid strategy game. Get 3 in a row to win!',
+    icon: '❌⭕',
     minPlayers: 2,
     maxPlayers: 2,
 

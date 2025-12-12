@@ -15,6 +15,8 @@ const GAP = 20;
 export const RockPaperScissors: IGame = {
     id: 'rockpaperscissors',
     title: 'Rock Paper Scissors',
+    description: 'The timeless hand game. Rock beats Scissors, Scissors beats Paper!',
+    icon: '✂️📄🗿',
     minPlayers: 2,
     maxPlayers: 2,
 
@@ -123,15 +125,15 @@ function drawResults(ctx: CanvasRenderingContext2D, state: RPSState, width: numb
 
     ctx.fillStyle = '#ffffff';
     ctx.font = '24px Inter, sans-serif';
-    ctx.fillText(`Player 1 chose: ${p1}`, width / 2, 150);
-    ctx.fillText(`Player 2 chose: ${p2}`, width / 2, 200);
+    ctx.fillText(`Player 1 chose: ${p1}`, width / 2, height * 0.25);
+    ctx.fillText(`Player 2 chose: ${p2}`, width / 2, height * 0.35);
 
     ctx.font = 'bold 36px Inter, sans-serif';
     if (state.winner === 0) ctx.fillStyle = '#4ade80'; // green
-    else if (state.winner === 1) ctx.fillStyle = '#f87171'; // red (from P1 perspective, P2 is opponent) -- wait, purely visual colors
+    else if (state.winner === 1) ctx.fillStyle = '#f87171'; // red
     else ctx.fillStyle = '#fbbf24'; // amber (draw)
 
-    ctx.fillText(state.resultMessage, width / 2, 300);
+    ctx.fillText(state.resultMessage, width / 2, height * 0.55);
 }
 
 function handleChoice(choice: string, state: RPSState): RPSState {
