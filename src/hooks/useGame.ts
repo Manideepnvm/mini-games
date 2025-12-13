@@ -48,24 +48,29 @@ export const useGame = (
         };
     }, [game, animate]);
 
-    const handleInput = (type: 'click' | 'keydown', event: any) => {
+    const handleInput = (type: 'click' | 'keydown' | 'mousemove', event: any) => {
         const canvas = canvasRef.current;
         if (!game || !gameState || !canvas) return;
 
-        let newState = { ...gameState };
+        let newState = gameState; // Don't clone yet, let the game decide if it returns a new state
+
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
 
         if (type === 'click' && game.handleClick) {
-            const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-
             newState = game.handleClick(x * scaleX, y * scaleY, newState, canvas.width, canvas.height);
+        } else if (type === 'mousemove' && game.handleMouseMove) {
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            newState = game.handleMouseMove(x * scaleX, y * scaleY, newState, canvas.width, canvas.height);
         }
 
-        setGameState(newState);
+        if (newState !== gameState) {
+            setGameState(newState);
+        }
     };
 
     return {

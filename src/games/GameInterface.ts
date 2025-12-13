@@ -32,6 +32,14 @@ export interface IGame {
     height: number
   ): GameState;
 
+  handleMouseMove?(
+    x: number,
+    y: number,
+    state: GameState,
+    width: number,
+    height: number
+  ): GameState;
+
   handleKeyDown?(
     key: string,
     state: GameState

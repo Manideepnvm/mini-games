@@ -39,8 +39,9 @@ export const GameContainer: React.FC<GameContainerProps> = ({ game, onBack }) =>
                     ref={canvasRef}
                     width={800}
                     height={600}
-                    className="bg-slate-900 rounded-xl shadow-2xl border border-slate-800 cursor-pointer"
+                    className="bg-slate-900 rounded-xl shadow-2xl border border-slate-800 cursor-pointer max-w-full h-auto"
                     onClick={(e) => handleInput('click', e)}
+                    onMouseMove={(e) => handleInput('mousemove', e)}
                 />
 
                 {/* Overlay for Game Over */}

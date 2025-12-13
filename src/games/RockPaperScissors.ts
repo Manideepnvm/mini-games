@@ -6,6 +6,7 @@ interface RPSState extends GameState {
     p1Choice: string | null;
     p2Choice: string | null;
     resultMessage: string;
+    hoverChoice?: string | null;
 }
 
 const BUTTON_WIDTH = 120;
@@ -76,6 +77,37 @@ export const RockPaperScissors: IGame = {
         }
 
         return state;
+    },
+
+    handleMouseMove(x: number, y: number, state: GameState, width: number, height: number): GameState {
+        const rState = state as RPSState;
+        if (rState.stage === 'result') return state;
+
+        const buttonsY = height / 2;
+        const totalWidth = 3 * BUTTON_WIDTH + 2 * GAP;
+        const startX = (width - totalWidth) / 2;
+        const choices = ['Rock', 'Paper', 'Scissors'];
+
+        let hoverChoice: string | null = null;
+
+        for (let i = 0; i < choices.length; i++) {
+            const btnX = startX + i * (BUTTON_WIDTH + GAP);
+            if (
+                x >= btnX &&
+                x <= btnX + BUTTON_WIDTH &&
+                y >= buttonsY &&
+                y <= buttonsY + BUTTON_HEIGHT
+            ) {
+                hoverChoice = choices[i].toLowerCase();
+                break;
+            }
+        }
+
+        if (rState.hoverChoice !== hoverChoice) {
+            return { ...rState, hoverChoice } as GameState;
+        }
+
+        return state;
     }
 };
 
@@ -102,20 +134,26 @@ function drawGameLoop(ctx: CanvasRenderingContext2D, state: RPSState, width: num
     choices.forEach((choice, i) => {
         const x = startX + i * (BUTTON_WIDTH + GAP);
         const y = buttonsY;
+        const isHovered = state.hoverChoice === choice.toLowerCase();
 
         // Button bg
-        ctx.fillStyle = '#1e293b'; // slate-800
+        ctx.fillStyle = isHovered ? '#334155' : '#1e293b'; // slate-700 / slate-800
         ctx.fillRect(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         // Border
-        ctx.strokeStyle = '#38bdf8'; // sky-400
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = isHovered ? '#7dd3fc' : '#38bdf8'; // sky-300 / sky-400
+        ctx.lineWidth = isHovered ? 3 : 2;
         ctx.strokeRect(x, y, BUTTON_WIDTH, BUTTON_HEIGHT);
 
         // Text
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 16px Inter, sans-serif';
+        ctx.fillStyle = isHovered ? '#ffffff' : '#e2e8f0';
+        ctx.font = isHovered ? 'bold 17px Inter, sans-serif' : 'bold 16px Inter, sans-serif';
         ctx.fillText(choice, x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2);
+
+        // Cursor style is handled by CSS on the canvas, but visuals help.
+        if (isHovered) {
+            document.body.style.cursor = 'pointer'; // Optional: might contend with CSS
+        }
     });
 }
 
